@@ -2,6 +2,27 @@
 
 The MEPS project is designed to easily and reliably send email.
 
-Given a list of email providers and a small provider-specific implementation,
-the user can send email through a list of providers. MEPS will try each provider
-one at a time until one provider succeeds, or they all fail to send.
+The current default provider is Mailgun. The default provider can be changed in
+`meps_config.json`. The value passed to the "default_mail_provider" parameter is
+the mail provider's class name. The following is an example:
+
+
+```
+{
+    "default_mail_provider": "MailgunProvider",
+    "mailgun_provider_api_key": "my_key"
+}
+
+```
+
+The `default_mail_provider` parameter is optional. The
+`mailgun_provider_api_key` is required, as the Mailgun provider requires an API
+key.
+
+To run MEPS, change directory to the MEPS repo and enter the following in your
+terminal:
+
+```
+export FLASK_APP=meps.py
+flask run
+```

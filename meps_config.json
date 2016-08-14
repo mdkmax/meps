@@ -1,0 +1,4 @@
+{
+    "default_mail_provider": "MailgunProvider",
+    "mailgun_provider_api_key": "my_mailgun_api_key"
+}
