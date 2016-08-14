@@ -1,2 +1,6 @@
 __init__.py
+
+*.egg-info/
+*.egg
+
 *.pyc
