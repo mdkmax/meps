@@ -14,7 +14,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
      flash, json
 
 from mail_provider_loader import MailProviderLoader
-from request_validator import validate_mail_request
+from request_validator import request_validator
 
 
 app = Flask(__name__)
@@ -42,7 +42,7 @@ def send_email():
     # Strip all HTML tags.
     mail['body'] = BeautifulSoup(mail['body'], 'html.parser').get_text()
 
-    if not validate_mail_request(mail):
+    if not request_validator.validate_mail_request(mail):
         abort(requests.codes['bad_request'])
 
     mail_providers = get_mail_providers()

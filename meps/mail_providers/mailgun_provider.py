@@ -17,10 +17,6 @@ class MailgunProvider:
                       'to': ['{} <{}>'.format(mail['to_name'], mail['to'])],
                       'subject': mail['subject'],
                       'text': mail['body']})
-
-            if response.status_code != requests.codes['ok']:
-                return response.status_code
-
             return response.status_code
         except ConnectionError:
             return requests.codes['request_timeout']

@@ -19,10 +19,18 @@ The `default_mail_provider` parameter is optional. The
 `mailgun_provider_api_key` is required, as the Mailgun provider requires an API
 key.
 
-To run MEPS, change directory to the MEPS repo and enter the following in your
-terminal:
+## Install Instructions
+
+Install the app from the root of the MEPS repo:
+
+`pip install --editable .`
+
+## Run Instructions
+
+To run MEPS, change directory to the MEPS repo root and enter the following in
+your terminal:
 
 ```
-export FLASK_APP=meps.py
+export FLASK_APP=meps.meps
 flask run
 ```
