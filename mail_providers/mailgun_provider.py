@@ -18,9 +18,9 @@ class MailgunProvider:
                       'subject': mail['subject'],
                       'text': mail['body']})
 
-            if response.status_code != 200:
-                return False, response.status_code
+            if response.status_code != requests.codes['ok']:
+                return response.status_code
 
-            return True, response.status_code
+            return response.status_code
         except ConnectionError:
-            return False, 408
+            return requests.codes['request_timeout']

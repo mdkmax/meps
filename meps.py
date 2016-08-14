@@ -35,21 +35,25 @@ def get_mail_providers():
 @app.route('/email', methods=['POST'])
 def send_email():
     if request.headers['Content-Type'] != 'application/json':
-        abort(400)
+        abort(requests.codes['bad_request'])
 
     mail = request.json
 
-    #Strip all HTML tags.
+    # Strip all HTML tags.
     mail['body'] = BeautifulSoup(mail['body'], 'html.parser').get_text()
 
     if not validate_mail_request(mail):
-        abort(400)
+        abort(requests.codes['bad_request'])
 
-    for mail_provider in get_mail_providers():
-        result, status_code = mail_provider.send_email(mail)
+    mail_providers = get_mail_providers()
 
-        if status_code == 200:
+    for mail_provider in mail_providers:
+        status_code = mail_provider.send_email(mail)
+
+        if status_code == requests.codes['ok']:
             return 'Mail sent successfully!', status_code
 
-    return ('All mail providers errored when sending mail. Returning most '
-        'recent status code.'), status_code
+    error_message = ('All mail providers errored when sending mail. Returning most '
+        'recent status code for mail provider {}.').format(mail_providers[-1])
+
+    return error_message, status_code
