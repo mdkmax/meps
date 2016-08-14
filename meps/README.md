@@ -34,3 +34,12 @@ your terminal:
 export FLASK_APP=meps.meps
 flask run
 ```
+
+## Test Instructions
+
+Tests rely on `pytest`. Tests can be run from the root directory with the
+following:
+
+```
+python setup.py test
+```

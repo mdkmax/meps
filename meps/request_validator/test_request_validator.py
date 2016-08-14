@@ -1,5 +1,3 @@
-import pytest
-
 from request_validator import validate_mail_request
 
 

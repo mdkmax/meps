@@ -20,6 +20,11 @@ from request_validator import request_validator
 app = Flask(__name__)
 
 
+@app.before_request
+def before_request():
+    g.mail_providers = get_mail_providers()
+
+
 def get_mail_providers():
     if not hasattr(g, 'mail_providers'):
         with open('meps_config.json') as config_file:
@@ -53,7 +58,7 @@ def send_email():
         if status_code == requests.codes['ok']:
             return 'Mail sent successfully!', status_code
 
-    error_message = ('All mail providers errored when sending mail. Returning most '
-        'recent status code for mail provider {}.').format(mail_providers[-1])
+    error_message = ('All mail providers errored when sending mail. Returning '
+        'most recent status code.')
 
     return error_message, status_code
