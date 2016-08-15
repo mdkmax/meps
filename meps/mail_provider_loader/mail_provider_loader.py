@@ -7,6 +7,12 @@
 
 """
 import importlib
+import sys
+import os
+
+# Add path for mail provider imports.
+basedir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, basedir + '/../')
 
 from mail_providers.mailgun_provider import MailgunProvider
 
@@ -60,6 +66,7 @@ class MailProviderLoader:
             providers.append(MailgunProvider(
                 config['mailgun_provider_api_key']))
         else:
+            # Mailgun is currently the only supported mail provider.
             raise UnsupportedMailProviderError
 
         return providers

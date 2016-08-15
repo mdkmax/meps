@@ -12,7 +12,7 @@ import requests
 from bs4 import BeautifulSoup
 from flask import abort, Flask, g, json, redirect, request, url_for
 
-from mail_provider_loader import MailProviderLoader
+from mail_provider_loader.mail_provider_loader import MailProviderLoader
 from request_validator import request_validator
 
 
