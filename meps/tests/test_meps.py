@@ -7,7 +7,6 @@
     providers.
 """
 
-import flask
 import json
 import pytest
 import requests

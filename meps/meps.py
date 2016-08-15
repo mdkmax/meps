@@ -10,8 +10,7 @@
 import requests
 
 from bs4 import BeautifulSoup
-from flask import Flask, request, session, g, redirect, url_for, abort, \
-     flash, json
+from flask import Flask, request, g, abort, json
 
 from mail_provider_loader import MailProviderLoader
 from request_validator import request_validator
