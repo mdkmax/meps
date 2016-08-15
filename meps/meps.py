@@ -19,11 +19,6 @@ from request_validator import request_validator
 app = Flask(__name__)
 
 
-@app.before_request
-def before_request():
-    g.mail_providers = get_mail_providers()
-
-
 def get_mail_providers():
     if not hasattr(g, 'mail_providers'):
         with open('meps_config.json') as config_file:
