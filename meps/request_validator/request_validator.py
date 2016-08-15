@@ -1,5 +1,6 @@
 from validate_email import validate_email
 
+
 def validate_mail_request(mail):
     if 'to_name' not in mail or 'from_name' not in mail:
         return False

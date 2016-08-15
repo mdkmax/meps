@@ -58,6 +58,6 @@ def send_email():
             return 'Mail sent successfully!', status_code
 
     error_message = ('All mail providers errored when sending mail. Returning '
-        'most recent status code.')
+                     'most recent status code.')
 
     return error_message, status_code

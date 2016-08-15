@@ -23,7 +23,8 @@ class MailProviderLoader:
         if 'mailgun_provider_api_key' not in config:
             raise MissingApiKeyError
 
-        default_mail_provider = config.get('default_mail_provider', 'MailgunProvider')
+        default_mail_provider = config.get(
+            'default_mail_provider', 'MailgunProvider')
 
         if default_mail_provider == 'MailgunProvider':
             self.providers.append(MailgunProvider(

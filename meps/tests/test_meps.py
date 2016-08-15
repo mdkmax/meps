@@ -86,12 +86,13 @@ def test_invalid_mail_provider(client):
     response = client_send_email(valid_mail)
 
     assert response.data == ('All mail providers errored when sending mail. '
-        'Returning most recent status code.')
+                             'Returning most recent status code.')
     assert response.status_code == requests.codes['request_timeout']
 
 
 def test_valid_and_invalid_mail_provider(client):
-    meps.get_mail_providers = Mock(return_value=[TestValidProvider(), TestInvalidProvider()])
+    meps.get_mail_providers = Mock(
+        return_value=[TestValidProvider(), TestInvalidProvider()])
 
     valid_mail = json.dumps({
         'to': 'to@example.com',
@@ -108,7 +109,8 @@ def test_valid_and_invalid_mail_provider(client):
 
 
 def test_invalid_and_valid_mail_provider(client):
-    meps.get_mail_providers = Mock(return_value=[TestInvalidProvider(), TestValidProvider()])
+    meps.get_mail_providers = Mock(
+        return_value=[TestInvalidProvider(), TestValidProvider()])
 
     valid_mail = json.dumps({
         'to': 'to@example.com',
