@@ -10,7 +10,7 @@
 import requests
 
 from bs4 import BeautifulSoup
-from flask import Flask, request, g, abort, json
+from flask import abort, Flask, g, json, redirect, request, url_for
 
 from mail_provider_loader import MailProviderLoader
 from request_validator import request_validator
@@ -34,6 +34,13 @@ def get_mail_providers():
             g.mail_providers = mail_provider.get_providers()
 
     return g.mail_providers
+
+
+# Add error message in case someone tries to POST to root.
+@app.route('/', methods=['POST'])
+def redirect_to_send_email():
+    error_message = 'Please send email to {}'.format(request.url + 'email')
+    return error_message, requests.codes['not_allowed']
 
 
 @app.route('/email', methods=['POST'])
