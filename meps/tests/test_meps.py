@@ -28,10 +28,6 @@ class TestInvalidProvider:
         return requests.codes['request_timeout']
 
 
-# Add mock get_mail_providers
-meps.get_mail_providers = Mock(return_value=[TestValidProvider()])
-
-
 @pytest.fixture
 def client():
     meps.app.config['TESTING'] = True
@@ -44,15 +40,22 @@ def client_send_email(mail):
     return client().post('/email', data=mail, content_type='application/json')
 
 
-def test_valid_email(client):
-    valid_mail = json.dumps({
+def get_valid_mail():
+    return {
         'to': 'to@example.com',
         'to_name': 'Jane Doe',
         'from': 'from@example.com',
         'from_name': 'John Smith',
         'subject': 'Test',
         'body': 'Hello World!',
-    })
+    }
+
+
+def test_valid_email(client):
+    # Add mock get_mail_providers
+    meps.get_mail_providers = Mock(return_value=[TestValidProvider()])
+
+    valid_mail = json.dumps(get_valid_mail())
     response = client_send_email(valid_mail)
 
     assert response.data == 'Mail sent successfully!'
@@ -60,13 +63,11 @@ def test_valid_email(client):
 
 
 def test_invalid_email(client):
-    valid_mail = json.dumps({
-        'to': 'toATexample.com',
-        'to_name': 'Jane Doe',
-        'from': 'from@example.com',
-        'from_name': 'John Smith',
-        'body': 'Hello World!',
-    })
+    meps.get_mail_providers = Mock(return_value=[TestValidProvider()])
+
+    valid_mail = get_valid_mail()
+    valid_mail['to'] = 'toATexample.com'
+    valid_mail = json.dumps(valid_mail)
     response = client_send_email(valid_mail)
 
     assert response.status_code == requests.codes['bad_request']
@@ -75,14 +76,7 @@ def test_invalid_email(client):
 def test_invalid_mail_provider(client):
     meps.get_mail_providers = Mock(return_value=[TestInvalidProvider()])
 
-    valid_mail = json.dumps({
-        'to': 'to@example.com',
-        'to_name': 'Jane Doe',
-        'from': 'from@example.com',
-        'from_name': 'John Smith',
-        'subject': 'Test',
-        'body': 'Hello World!',
-    })
+    valid_mail = json.dumps(get_valid_mail())
     response = client_send_email(valid_mail)
 
     assert response.data == ('All mail providers errored when sending mail. '
@@ -94,14 +88,7 @@ def test_valid_and_invalid_mail_provider(client):
     meps.get_mail_providers = Mock(
         return_value=[TestValidProvider(), TestInvalidProvider()])
 
-    valid_mail = json.dumps({
-        'to': 'to@example.com',
-        'to_name': 'Jane Doe',
-        'from': 'from@example.com',
-        'from_name': 'John Smith',
-        'subject': 'Test',
-        'body': 'Hello World!',
-    })
+    valid_mail = json.dumps(get_valid_mail())
     response = client_send_email(valid_mail)
 
     assert response.data == 'Mail sent successfully!'
@@ -112,14 +99,24 @@ def test_invalid_and_valid_mail_provider(client):
     meps.get_mail_providers = Mock(
         return_value=[TestInvalidProvider(), TestValidProvider()])
 
-    valid_mail = json.dumps({
-        'to': 'to@example.com',
-        'to_name': 'Jane Doe',
-        'from': 'from@example.com',
-        'from_name': 'John Smith',
-        'subject': 'Test',
-        'body': 'Hello World!',
-    })
+    valid_mail = json.dumps(get_valid_mail())
+    response = client_send_email(valid_mail)
+
+    assert response.data == 'Mail sent successfully!'
+    assert response.status_code == requests.codes['ok']
+
+def test_many_mail_providers(client):
+    mail_providers = []
+
+    # Append 9 invalid test providers
+    for i in xrange(0, 9):
+        mail_providers.append(TestInvalidProvider())
+
+    mail_providers.append(TestValidProvider())
+
+    meps.get_mail_providers = Mock(return_value=mail_providers)
+
+    valid_mail = json.dumps(get_valid_mail())
     response = client_send_email(valid_mail)
 
     assert response.data == 'Mail sent successfully!'

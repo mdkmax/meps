@@ -20,6 +20,11 @@ app = Flask(__name__)
 
 
 def get_mail_providers():
+    """Instantiate mail providers as needed per request on the Flask global object.
+
+    Returns:
+        A list of mail provider instances.
+    """
     if not hasattr(g, 'mail_providers'):
         with open('meps_config.json') as config_file:
             config = json.load(config_file)
@@ -31,15 +36,32 @@ def get_mail_providers():
     return g.mail_providers
 
 
-# Add error message in case someone tries to POST to root.
 @app.route('/', methods=['POST'])
 def redirect_to_send_email():
+    """Send error message in case someone tries to POST to root.
+
+    Returns:
+        A tuple containing an error message followed by the HTTP code 405 for
+        not allowed requests.
+    """
     error_message = 'Please send email to {}'.format(request.url + 'email')
     return error_message, requests.codes['not_allowed']
 
 
 @app.route('/email', methods=['POST'])
 def send_email():
+    """Sends email to the list of mail providers.
+
+    Iterates through a list of mail providers and attempts to send the given
+    mail through each one. Returns a success message and error code on the first
+    successful send. Otherwise, iterates through all mail providers and returns
+    an error message with the status code of the last mail provider send
+    request.
+
+    Returns:
+        A tuple containing the request status message followed by the status
+        code.
+    """
     if request.headers['Content-Type'] != 'application/json':
         abort(requests.codes['bad_request'])
 
