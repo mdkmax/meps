@@ -14,11 +14,11 @@ class MailgunProvider:
     def __init__(self, api_key):
         self._api_key = api_key
 
-    def send_email(self, mail):
+    def send_email(self, email):
         """Sends email to the Mailgun API endpoint.
 
         Args:
-            mail: A dictionary containing the mail request
+            email: A dictionary containing the email request
 
         Returns:
             An HTTP status code from the Mailgun response. If the Mailgun
@@ -30,10 +30,10 @@ class MailgunProvider:
                 'https://api.mailgun.net/v3/sandbox18b60def035c45ad9499441c9e34'
                 '9853.mailgun.org/messages',
                 auth=('api', self._api_key),
-                data={'from': '{} <{}>'.format(mail['from_name'], mail['from']),
-                      'to': ['{} <{}>'.format(mail['to_name'], mail['to'])],
-                      'subject': mail['subject'],
-                      'text': mail['body']})
+                data={'from': '{} <{}>'.format(email['from_name'], email['from']),
+                      'to': ['{} <{}>'.format(email['to_name'], email['to'])],
+                      'subject': email['subject'],
+                      'text': email['body']})
             return response.status_code
         except ConnectionError:
             return requests.codes['request_timeout']

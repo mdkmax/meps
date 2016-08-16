@@ -10,7 +10,7 @@ from context import request_validator
 from request_validator import request_validator
 
 
-def get_valid_mail():
+def get_valid_email():
     return {
         'to': 'to@example.com',
         'to_name': 'Jane Doe',
@@ -21,61 +21,61 @@ def get_valid_mail():
     }
 
 
-def test_valid_mail():
-    assert request_validator.validate_mail_request(get_valid_mail())
+def test_valid_email():
+    assert request_validator.validate_email_request(get_valid_email())
 
 
 def test_missing_to():
-    invalid_mail = get_valid_mail()
-    del invalid_mail['to']
+    invalid_email = get_valid_email()
+    del invalid_email['to']
 
-    assert not request_validator.validate_mail_request(invalid_mail)
+    assert not request_validator.validate_email_request(invalid_email)
 
 
 def test_missing_to_name():
-    invalid_mail = get_valid_mail()
-    del invalid_mail['to_name']
+    invalid_email = get_valid_email()
+    del invalid_email['to_name']
 
-    assert not request_validator.validate_mail_request(invalid_mail)
+    assert not request_validator.validate_email_request(invalid_email)
 
 
 def test_missing_from():
-    invalid_mail = get_valid_mail()
-    del invalid_mail['from']
+    invalid_email = get_valid_email()
+    del invalid_email['from']
 
-    assert not request_validator.validate_mail_request(invalid_mail)
+    assert not request_validator.validate_email_request(invalid_email)
 
 
 def test_missing_from_name():
-    invalid_mail = get_valid_mail()
-    del invalid_mail['from_name']
+    invalid_email = get_valid_email()
+    del invalid_email['from_name']
 
-    assert not request_validator.validate_mail_request(invalid_mail)
+    assert not request_validator.validate_email_request(invalid_email)
 
 
 def test_missing_subject():
-    invalid_mail = get_valid_mail()
-    del invalid_mail['subject']
+    invalid_email = get_valid_email()
+    del invalid_email['subject']
 
-    assert not request_validator.validate_mail_request(invalid_mail)
+    assert not request_validator.validate_email_request(invalid_email)
 
 
 def test_missing_body():
-    invalid_mail = get_valid_mail()
-    del invalid_mail['body']
+    invalid_email = get_valid_email()
+    del invalid_email['body']
 
-    assert not request_validator.validate_mail_request(invalid_mail)
+    assert not request_validator.validate_email_request(invalid_email)
 
 
 def test_invalid_to_email():
-    invalid_mail = get_valid_mail()
-    invalid_mail['to'] = 'toATexample.com'
+    invalid_email = get_valid_email()
+    invalid_email['to'] = 'toATexample.com'
 
-    assert not request_validator.validate_mail_request(invalid_mail)
+    assert not request_validator.validate_email_request(invalid_email)
 
 
 def test_invalid_from_email():
-    invalid_mail = get_valid_mail()
-    invalid_mail['from'] = 'fromATexample.com'
+    invalid_email = get_valid_email()
+    invalid_email['from'] = 'fromATexample.com'
 
-    assert not request_validator.validate_mail_request(invalid_mail)
+    assert not request_validator.validate_email_request(invalid_email)

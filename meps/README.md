@@ -1,22 +1,22 @@
-# Multiple Email Providers Service (MEPS)
+# Multiple Eemail Providers Service (MEPS)
 
 The MEPS project is designed to easily and reliably send email.
 
 The current default provider is Mailgun. The default provider can be changed in
-`meps_config.json`. The value passed to the "default_mail_provider" parameter is
-the mail provider's class name. The following is an example:
+`meps_config.json`. The value passed to the "default_email_provider" parameter
+is the email provider's class name. The following is an example:
 
 
 ```
 {
-    "default_mail_provider": "MailgunProvider",
-    "mailgun_provider_api_key": "my_key"
+    "default_email_provider": "MailgunProvider",
+    "emailgun_provider_api_key": "my_key"
 }
 
 ```
 
-The `default_mail_provider` parameter is optional. The
-`mailgun_provider_api_key` is required, as the Mailgun provider requires an API
+The `default_email_provider` parameter is optional. The
+`emailgun_provider_api_key` is required, as the Mailgun provider requires an API
 key.
 
 ## Install Instructions
@@ -38,7 +38,7 @@ flask run
 The app launches on `http://localhost:5000/` by default.
 
 Currently, only email sent via POST requests are accepted. The default endpoint
-for sending mail via POST requests is:
+for sending email via POST requests is:
 
 ```
 http://localhost:5000/email
@@ -60,8 +60,8 @@ python setup.py test
 
 ## Design
 
-MEPS uses Python and Flask, a microframework, to send mail through multiple
-mail servers.
+MEPS uses Python and Flask, a microframework, to send email through multiple
+email servers.
 
 Python was chosen for its simplicity, plentiful libraries, and ease of use
 around servers and testing.
@@ -92,34 +92,34 @@ an asynchronous framework like Klein would be more suitable.
 
 MEPS has its core Flask server located in `meps/meps.py`. The server config is
 located at `meps/meps_config.json` and allows the specification of the default
-mail provider and the API key for Mailgun.
+email provider and the API key for Mailgun.
 
-### Email Request Validation
+### Eemail Request Validation
 
 Each email sent to the email endpoint is validated by the `request_validator`
-module before being sent to the mail providers. The emails must meet the
+module before being sent to the email providers. The emails must meet the
 following requirements:
 
 1) The fields 'to', 'to_name', 'from', 'from_name', 'subject', and
-   'body' exist in the mail request
+   'body' exist in the email request
 2) Both 'to' and 'from' contain valid email addresses.
 
-### Mail Provider Loader
+### Email Provider Loader
 
-MEPS loads mail providers based on the `meps_config.json` through the
-`MailProviderLoader` class. `MailProviderLoader` loads all supported mail
+MEPS loads email providers based on the `meps_config.json` through the
+`EmailProviderLoader` class. `MailProviderLoader` loads all supported email
 providers.
 
-MEPS then iterates through each mail provider and sends mail until one mail
-provider succeeds, or all mail providers fail.
+MEPS then iterates through each email provider and sends email until one email
+provider succeeds, or all email providers fail.
 
-### Mail Providers
+### Email Providers
 
-Each mail provider is intended to be very simple and self-contained. The
+Each email provider is intended to be very simple and self-contained. The
 `MailgunProvider` class sends the given email to the Mailgun service via a
 single POST request to the Mailgun HTTP API.
 
-Mailgun is currently the only supported mail provider.
+Mailgun is currently the only supported email provider.
 
 ### Tests
 
@@ -130,8 +130,8 @@ directory and use `pytest`. See the Test Instructions for running tests.
 
 ### Database
 
-Adding a database to store mail data would be useful for long-term querying. It
-may be helpful to store the mail locally for later retrieval and analysis.
+Adding a database to store email data would be useful for long-term querying. It
+may be helpful to store the email locally for later retrieval and analysis.
 
 Privacy is a concern, however, as some users may send personal information that
 they do not intend for others to store and read.
@@ -142,26 +142,26 @@ No frontend currently exists for MEPS, as it was designed to be a simple HTTP
 service. Adding a page for a user to send email would make the project more
 user-friendly.
 
-Also, adding clear uptime status for each mail provider would be useful in
+Also, adding clear uptime status for each email provider would be useful in
 informing the user of outages.
 
 ### Dynamic Configs
 
 By changing the config file to specify the module, class name, and API key of
-mail providers, it becomes possible to dynamically load mail providers as long
-as they exist under `mail_providers/` and are specified in the config. The
-default mail provider would be the first mail provider specified in the config,
-or could be specified by a different config parameter.
+email providers, it becomes possible to dynamically load email providers as long
+as they exist under `email_providers/` and are specified in the config. The
+default email provider would be the first email provider specified in the
+config, or could be specified by a different config parameter.
 
-It may be wiser to test with multiple mail providers before implementing the
-above feature, as some mail providers may require much different configuration
+It may be wiser to test with multiple email providers before implementing the
+above feature, as some email providers may require much different configuration
 than a simple API key.
 
-### Attachments and Mail Headers
+### Attachments and Email Headers
 
-It would be nice to add support for mail attachments and additional mail header
-fields, like CC and BCC. Also, supporting multiple addresses in the "to" field
-would be useful.
+It would be nice to add support for email attachments and additional email
+header fields, like CC and BCC. Also, supporting multiple addresses in the "to"
+field would be useful.
 
 These features would require additional testing and careful handling of
 attachments and multi-part uploads. MEPS would also have to handle long upload

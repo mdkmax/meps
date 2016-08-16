@@ -3,7 +3,7 @@
     Multiple Email Providers Service (MEPS)
     ------------------------------
     A service that validations email POST requests and forwards them to
-    available mail services that are specified in configurations.
+    available email services that are specified in configurations.
 
 """
 
@@ -12,28 +12,28 @@ import requests
 from bs4 import BeautifulSoup
 from flask import abort, Flask, g, json, redirect, request, url_for
 
-from mail_provider_loader.mail_provider_loader import MailProviderLoader
+from email_provider_loader.email_provider_loader import EmailProviderLoader
 from request_validator import request_validator
 
 
 app = Flask(__name__)
 
 
-def get_mail_providers():
-    """Instantiate mail providers as needed per request on the Flask global object.
+def get_email_providers():
+    """Instantiate email providers as needed.
 
     Returns:
-        A list of mail provider instances.
+        A list of email provider instances.
     """
-    if not hasattr(g, 'mail_providers'):
+    if not hasattr(g, 'email_providers'):
         with open('meps/meps_config.json') as config_file:
             config = json.load(config_file)
 
-            # Instantiate all mail providers.
-            mail_provider = MailProviderLoader(config)
-            g.mail_providers = mail_provider.get_providers()
+            # Instantiate all email providers.
+            email_provider = EmailProviderLoader(config)
+            g.email_providers = email_provider.get_providers()
 
-    return g.mail_providers
+    return g.email_providers
 
 
 @app.route('/', methods=['POST'])
@@ -50,13 +50,13 @@ def redirect_to_send_email():
 
 @app.route('/email', methods=['POST'])
 def send_email():
-    """Sends email to the list of mail providers.
+    """Sends email to the list of email providers.
 
-    Iterates through a list of mail providers and attempts to send the given
-    mail through each one. Returns a success message and error code on the first
-    successful send. Otherwise, iterates through all mail providers and returns
-    an error message with the status code of the last mail provider send
-    request.
+    Iterates through a list of email providers and attempts to send the given
+    email through each one. Returns a success message and error code on the
+    first successful send. Otherwise, iterates through all email providers and
+    returns an error message with the status code of the last email provider
+    send request.
 
     Returns:
         A tuple containing the request status message followed by the status
@@ -65,23 +65,23 @@ def send_email():
     if request.headers['Content-Type'] != 'application/json':
         abort(requests.codes['bad_request'])
 
-    mail = request.json
+    email = request.json
 
     # Strip all HTML tags.
-    mail['body'] = BeautifulSoup(mail['body'], 'html.parser').get_text()
+    email['body'] = BeautifulSoup(email['body'], 'html.parser').get_text()
 
-    if not request_validator.validate_mail_request(mail):
+    if not request_validator.validate_email_request(email):
         abort(requests.codes['bad_request'])
 
-    mail_providers = get_mail_providers()
+    email_providers = get_email_providers()
 
-    for mail_provider in mail_providers:
-        status_code = mail_provider.send_email(mail)
+    for email_provider in email_providers:
+        status_code = email_provider.send_email(email)
 
         if status_code == requests.codes['ok']:
             return 'Mail sent successfully!', status_code
 
-    error_message = ('All mail providers errored when sending mail. Returning '
-                     'most recent status code.')
+    error_message = ('All email providers errored when sending email. '
+                     'Returning most recent status code.')
 
     return error_message, status_code
