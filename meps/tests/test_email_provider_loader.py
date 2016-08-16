@@ -3,7 +3,7 @@
     Mail Provider tests
     ----------
 
-    Tests the mail provider and ensures that the MEPS config has the correct
+    Tests the email provider and ensures that the MEPS config has the correct
     parameters.
 """
 import pytest
@@ -11,8 +11,6 @@ import pytest
 from context import email_provider_loader
 from context import email_providers
 from email_provider_loader import email_provider_loader
-print dir(email_providers)
-print dir(email_providers.mailgun_provider)
 from email_providers.mailgun_provider import MailgunProvider
 
 
@@ -28,9 +26,9 @@ def test_valid_config_load():
         get_valid_config())
     providers = test_email_provider_loader.get_providers()
 
-    # Test that we have at least 1 mail provider
+    # Test that we have at least 1 email provider
     assert len(providers) > 0
-    # Test that default mail provider is MailgunProvider
+    # Test that default email provider is MailgunProvider
     assert isinstance(providers[0], MailgunProvider)
 
 
@@ -41,7 +39,7 @@ def test_missing_default_email_provider_config_load():
         valid_config)
     providers = test_email_provider_loader.get_providers()
 
-    # Test that we have at least 1 mail provider
+    # Test that we have at least 1 email provider
     assert len(providers) > 0
 
 
