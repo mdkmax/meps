@@ -1,10 +1,27 @@
-# Multiple Eemail Providers Service (MEPS)
+# Multiple Email Providers Service (MEPS)
 
 The MEPS project is designed to easily and reliably send email.
 
-The current default provider is Mailgun. The default provider can be changed in
-`meps_config.json`. The value passed to the "default_email_provider" parameter
-is the email provider's class name. The following is an example:
+Email processing and sending occurs in the following stages:
+
+1. The email request is received in a POST request and checked if its JSON
+content
+2. The request is validated against the request validator
+3. The email providers are fetched from the email provider loader
+4. The email providers are iterated over, stopping when either the email request
+is sent successfully or if all email providers fail to send
+
+Each stage is broken out into different components. This enables quick and
+simple testing and iteration. For instance, if additional email request fields
+need to be validated, the request validator can be modified and have
+corresponding unit tests added to `test_request_validator.py`. Likewise, if the
+email provider loader needs to accommodate new email providers or config loading
+parameters, it can be modified and have its tests updated separately from the
+rest of the system.
+
+The current default email provider is Mailgun. The default provider can be
+changed in `meps_config.json`. The value passed to the `default_email_provider`
+parameter is the email provider's class name. The following is an example:
 
 
 ```
@@ -21,7 +38,11 @@ key.
 
 ## Install Instructions
 
-Install the app from the root of the MEPS repo:
+For Ubuntu 14.04 LTS, install the following Debian packages:
+
+`sudo apt-get install python python-pip`
+
+Install the MEPS app from the root of the MEPS repo:
 
 `pip install --editable .`
 
@@ -37,8 +58,8 @@ flask run
 
 The app launches on `http://localhost:5000/` by default.
 
-Currently, only email sent via POST requests are accepted. The default endpoint
-for sending email via POST requests is:
+Currently, only email sent as JSON content via POST requests are accepted. The
+default endpoint for sending email via POST requests is:
 
 ```
 http://localhost:5000/email
@@ -82,7 +103,7 @@ would be useful for extending MEPS, such as a database integration layer and
 templating language.
 
 Other microframeworks did not have as clear documentation or as many
-self-contained examples as Flask. Also, Flask appears to have cleaner and more
+self-contained examples as Flask. Flask also appears to have cleaner and more
 explicit handling of application context, request context, response handling,
 and the global request context.
 
@@ -94,15 +115,15 @@ MEPS has its core Flask server located in `meps/meps.py`. The server config is
 located at `meps/meps_config.json` and allows the specification of the default
 email provider and the API key for Mailgun.
 
-### Eemail Request Validation
+### Email Request Validation
 
 Each email sent to the email endpoint is validated by the `request_validator`
 module before being sent to the email providers. The emails must meet the
 following requirements:
 
-1) The fields 'to', 'to_name', 'from', 'from_name', 'subject', and
-   'body' exist in the email request
-2) Both 'to' and 'from' contain valid email addresses.
+1. The fields 'to', 'to_name', 'from', 'from_name', 'subject', and
+'body' exist in the email request
+2. Both 'to' and 'from' contain valid email addresses.
 
 ### Email Provider Loader
 
@@ -155,7 +176,7 @@ config, or could be specified by a different config parameter.
 
 It may be wiser to test with multiple email providers before implementing the
 above feature, as some email providers may require much different configuration
-than a simple API key.
+than only an API key.
 
 ### Attachments and Email Headers
 
