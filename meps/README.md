@@ -44,6 +44,11 @@ for sending mail via POST requests is:
 http://localhost:5000/email
 ```
 
+MEPS uses Python 2, but can easily be ported to Python 3, as the main changes
+would be import statements. Python 2 was chosen due to some potential encoding
+compatibility concerns with Flask dependencies and Python 3, as noted here:
+http://flask.pocoo.org/docs/0.11/python3
+
 ## Test Instructions
 
 Tests rely on `pytest`. Tests can be run from the root directory with the
@@ -66,9 +71,24 @@ also makes it very easy to deal with application context and request context,
 ensuring that each request is independent and can easily be handled in a RESTful
 manner.
 
+Other microframeworks were investigated, such as Bottle and Bobo. Bottle is
+explicitly very self-contained, which is great for simplicity and simple
+dependencies. However, reinventing many features contained in Flask and its
+dependencies on Jinja2 and Werkzeug means that Bottle may have fewer features
+and be less complete.
+
+Bobo is very lightweight and simple to use. However it lacks many features that
+would be useful for extending MEPS, such as a database integration layer and
+templating language.
+
+Other microframeworks did not have as clear documentation or as many
+self-contained examples as Flask. Also, Flask seems to have cleaner and more
+explicit handling of application context, request context, response handling,
+and the global request context.
+
 However, Flask, being based on WSGI, is fundamentally synchronous and blocking.
 If MEPS begins to require higher performance under heavier request loads, then
-an asynchronous framework like Twisted Klein would be more suitable.
+an asynchronous framework like Klein would be more suitable.
 
 MEPS has its core Flask server located in `meps/meps.py`. The server config is
 located at `meps/meps_config.json` and allows the specification of the default
