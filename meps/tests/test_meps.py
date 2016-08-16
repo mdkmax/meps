@@ -11,7 +11,7 @@ import json
 import pytest
 import requests
 
-from mock import Mock
+from mock import Mock, patch
 
 from context import meps
 
@@ -105,6 +105,7 @@ def test_invalid_and_valid_mail_provider(client):
     assert response.data == 'Mail sent successfully!'
     assert response.status_code == requests.codes['ok']
 
+
 def test_many_mail_providers(client):
     mail_providers = []
 
@@ -121,3 +122,19 @@ def test_many_mail_providers(client):
 
     assert response.data == 'Mail sent successfully!'
     assert response.status_code == requests.codes['ok']
+
+
+@patch.object(TestValidProvider, 'send_email')
+def test_html_tags_stripped(client):
+    test_valid_provider = TestValidProvider()
+    meps.get_mail_providers = Mock(return_value=[test_valid_provider])
+
+    valid_mail = get_valid_mail()
+    valid_mail['body'] = '<div><p>Hello</p><p>World!</p></div>'
+    valid_mail = json.dumps(valid_mail)
+    response = client_send_email(valid_mail)
+
+    expected_mail = get_valid_mail()
+    expected_mail['body'] = 'HelloWorld!'
+
+    test_valid_provider.send_email.assert_called_with(expected_mail)
