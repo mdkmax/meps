@@ -73,16 +73,16 @@ manner.
 
 Other microframeworks were investigated, such as Bottle and Bobo. Bottle is
 explicitly very self-contained, which is great for simplicity and simple
-dependencies. However, reinventing many features contained in Flask and its
-dependencies on Jinja2 and Werkzeug means that Bottle may have fewer features
-and be less complete.
+dependencies. However, since bottle reimplements many features contained in
+Flask and its Jinja2 and Werkzeug dependencies, Bottle may have fewer features
+that would be useful for MEPS in future development.
 
 Bobo is very lightweight and simple to use. However it lacks many features that
 would be useful for extending MEPS, such as a database integration layer and
 templating language.
 
 Other microframeworks did not have as clear documentation or as many
-self-contained examples as Flask. Also, Flask seems to have cleaner and more
+self-contained examples as Flask. Also, Flask appears to have cleaner and more
 explicit handling of application context, request context, response handling,
 and the global request context.
 
@@ -142,6 +142,9 @@ No frontend currently exists for MEPS, as it was designed to be a simple HTTP
 service. Adding a page for a user to send email would make the project more
 user-friendly.
 
+Also, adding clear uptime status for each mail provider would be useful in
+informing the user of outages.
+
 ### Dynamic Configs
 
 By changing the config file to specify the module, class name, and API key of
@@ -153,3 +156,14 @@ or could be specified by a different config parameter.
 It may be wiser to test with multiple mail providers before implementing the
 above feature, as some mail providers may require much different configuration
 than a simple API key.
+
+### Attachments and Mail Headers
+
+It would be nice to add support for mail attachments and additional mail header
+fields, like CC and BCC. Also, supporting multiple addresses in the "to" field
+would be useful.
+
+These features would require additional testing and careful handling of
+attachments and multi-part uploads. MEPS would also have to handle long upload
+times for large attachments, which may add load and performance concerns on the
+MEPS server.
