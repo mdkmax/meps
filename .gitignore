@@ -3,7 +3,10 @@ __pycache__/
 
 __init__.py
 
+.eggs/
 *.egg-info/
 *.egg
 
 *.pyc
+
+venv/

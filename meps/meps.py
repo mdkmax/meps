@@ -26,7 +26,7 @@ def get_mail_providers():
         A list of mail provider instances.
     """
     if not hasattr(g, 'mail_providers'):
-        with open('meps_config.json') as config_file:
+        with open('meps/meps_config.json') as config_file:
             config = json.load(config_file)
 
             # Instantiate all mail providers.
