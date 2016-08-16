@@ -178,6 +178,19 @@ It may be wiser to test with multiple email providers before implementing the
 above feature, as some email providers may require much different configuration
 than only an API key.
 
+### Logging
+
+Logging email provider responses and statuses would be useful for determining if
+an email provider is too lossy or error-prone and needs to be removed. This
+would save time otherwise potentially wasted in timeout errors. If one is using
+paid email provider accounts, removing error-prone email providers can result in
+cost savings.
+
+Care needs to be taken when logging many email provider responses at scale. It
+would be possible to fill the disk with logs, or have too any log files in one
+directory, which can result in server errors. Logging would require disk usage
+monitoring and maintenance at scale.
+
 ### Attachments and Email Headers
 
 It would be nice to add support for email attachments and additional email
