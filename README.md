@@ -65,6 +65,13 @@ default endpoint for sending email via POST requests is:
 http://localhost:5000/email
 ```
 
+Testing the live server can be done with `curl`, replacing `to@email.com` with a
+valid email address for testing:
+
+```
+curl -H "Content-Type: application/json" -X POST -d '{"to":"to@email.com","to_name": "To Name", "from": "from@email.com", "from_name": "From Name", "subject":"Hello", "body":"Testing MEPS!"}' http://localhost:5000/email
+```
+
 MEPS uses Python 2, but can easily be ported to Python 3, as the main changes
 would be import statements. Python 2 was chosen due to some potential encoding
 compatibility concerns with Flask dependencies and Python 3, as noted here:
